@@ -1,6 +1,8 @@
 import { statsbombService } from "./services/StatsBombservices.js";
 import { eventProcessor } from "./utils/eventProcessor.js";
 import { momentumModel } from "./utils/momentumModel.js";
+import { momentumObjective } from "./algorithms/momentumObjective.js";
+import { divideAndConquer } from "./algorithms/divideAndConquer.js";
 
 // 1. Извличаме всички събития от мача
 const events = await statsbombService.getMatchEvents(3890563);
@@ -298,3 +300,102 @@ const matchAdvantage = momentumModel.calculateMatchAdvantage(
 console.table(matchAdvantage.slice(0, 10));
 
 console.log("Total minutes:", matchAdvantage.length);
+
+
+
+const momentum = [0.05, 0.04];
+const advantage = [0.04, 0.03];
+
+const testAdvantage = [0.05, -0.03];
+const lambda = 1;
+
+const result = divideAndConquer.buildMomentumSegment(
+    testAdvantage,
+    0,
+    testAdvantage.length - 1,
+    lambda
+);
+
+console.log("Original Advantage:", testAdvantage);
+console.log("Calculated Momentum:", result);
+
+
+const testAdvantageLong = [0.05, 0.04, 0.03, -0.01, 0.04, 0.06];
+
+const testMomentumLong = divideAndConquer.buildMomentumSegment(
+    testAdvantageLong,
+    0,
+    testAdvantageLong.length - 1,
+    1
+);
+
+console.log("Original:", testAdvantageLong);
+console.log("Momentum:", testMomentumLong);
+
+console.log(
+    "Original Cost:",
+    momentumObjective.calculateTotalCost(testAdvantageLong, testAdvantageLong, 1)
+);
+
+console.log(
+    "Momentum Cost:",
+    momentumObjective.calculateTotalCost(testMomentumLong, testAdvantageLong, 1)
+);
+
+
+const realAdvantage = matchAdvantage.map(item => item.advantage);
+
+
+const realMomentum = divideAndConquer.buildMomentumSegment(
+    realAdvantage,
+    0,
+    realAdvantage.length - 1,
+    1
+);
+
+
+console.log("Original Minutes:", realAdvantage.length);
+console.log("Momentum Minutes:", realMomentum.length);
+
+console.log("Original Cost:",
+    momentumObjective.calculateTotalCost(realAdvantage, realAdvantage, 1));
+
+console.log("Momentum Cost:",
+    momentumObjective.calculateTotalCost(realMomentum, realAdvantage, 1));
+
+
+
+    const comparison = matchAdvantage.slice(0, 10).map((item, index) => ({
+    minute: item.minute,
+    advantage: item.advantage.toFixed(4),
+    momentum: realMomentum[index].toFixed(4)
+}));
+
+console.table(comparison);
+
+const testLambda = 0.25;
+
+const momentum025 = divideAndConquer.buildMomentumSegment(
+    realAdvantage,
+    0,
+    realAdvantage.length - 1,
+    testLambda
+);
+
+console.table(
+    matchAdvantage.slice(0, 10).map((item, index) => ({
+        minute: item.minute,
+        advantage: item.advantage.toFixed(4),
+        momentum: momentum025[index].toFixed(4)
+    }))
+);
+
+
+const graphData = realAdvantage.map((value, index) => ({
+    minute: index,
+    advantage: value,
+    momentum1: realMomentum[index],
+    momentum025: momentum025[index]
+}));
+
+console.log(JSON.stringify(graphData));
