@@ -1,0 +1,14 @@
+{
+  "name": "footballmatchinteligence",
+  "version": "1.0.0",
+  "description": "Football match analytics application",
+  "type": "module",
+  "main": "server/src/app.js",
+  "scripts": {
+    "start": "node server/src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
