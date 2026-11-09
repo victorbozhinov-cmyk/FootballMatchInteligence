@@ -15,18 +15,19 @@ async function getCompetitions(){
    return response
 }
 
-async function getSeason(season){
+async function getSeason(seasonId){
     const competitions = await getCompetitions()
 
-    const data = competitions.filter(competition => competition.season_name === season)
+    const data = competitions.filter(competition => competition.season_id === seasonId)
    
     return data
 }
 
-async function getLeague(league){
+async function getLeague(leagueId){
     const competitions = await getCompetitions()
+    
 
-    const data = competitions.filter(competition => competition.competition_name === league)
+    const data = competitions.filter(competition => competition.competition_id === leagueId)
    
     return data
 }
@@ -36,6 +37,31 @@ async function getMatches(competitionId, seasonId){
 
     return matches
    
+}
+
+async function getClubs(competitionId, seasonId){
+    const matches = await getMatches(competitionId, seasonId)
+
+    const homeClubs = matches.map(match => [
+    match.home_team.home_team_id,
+    match.home_team.home_team_name
+    ])
+    const awayClubs = matches.map(match => [
+    match.away_team.away_team_id,
+    match.away_team.away_team_name
+    ])
+
+    const clubs = [... new Map([...homeClubs, ...awayClubs])]
+    return clubs
+}
+
+async function getClubMatches(competitionId, seasonId, clubId){
+
+    const matches = await getMatches(competitionId, seasonId)
+
+    const clubMatches = matches.filter(match=>match.home_team.home_team_id === clubId || match.away_team.away_team_id === clubId)
+
+    return clubMatches
 }
 
 async function getMatchEvents(matchId){
@@ -52,5 +78,7 @@ export const statsbombService = {
     getSeason,
     getLeague,
     getMatches,
-    getMatchEvents
+    getMatchEvents,
+    getClubMatches,
+    getClubs
 }
