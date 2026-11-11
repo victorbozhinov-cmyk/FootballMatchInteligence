@@ -1,4 +1,10 @@
-import { homeView } from "../views/homeView.js";
+import { showHomeView } from "../views/homeView.js";
+import { lib } from "./lib.js";
+import { showMatchesView } from "../views/MatchesView.js";
 
-homeView.populateCompetitions()
+lib.page("/", showHomeView);
+lib.page("/matches", showMatchesView);
+
+
+lib.page()
 

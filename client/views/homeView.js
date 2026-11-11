@@ -2,7 +2,18 @@ import { api } from "../js/footballInteligenceRequester.js";
 import { footballInteligenceServices } from "../js/footballInteligenceServices.js";
 import { lib } from "../js/lib.js";
 
+
+const competitionsList = document.getElementById("competition")
+competitionsList.addEventListener("change", onChosenCompetition)
+const findMatchesButton = document.getElementById("find-matches")
+findMatchesButton.addEventListener("click", onFindMatches)
+const clubsList = document.getElementById("club")
+const seasonsList = document.getElementById("season")
+seasonsList.addEventListener("change", onChosenSeason)
+clubsList.addEventListener("change", updateFindMatchesButton)
+
 async function populateCompetitions(){
+    findMatchesButton.disabled = true
     const competitions = await footballInteligenceServices.loadCompetitions()
 
     const uniqueCompetitions = [...new Map(
@@ -11,8 +22,7 @@ async function populateCompetitions(){
         competition.competition_name
     ]))]
 
-    const competitionsList = document.getElementById("competition")
-    competitionsList.addEventListener("change", onChosenCompetition)
+    
 
     const temp = ([id, name])=> lib.html `<option value="${id}">${name}</option>`
 
@@ -21,14 +31,14 @@ async function populateCompetitions(){
 
 
     lib.render(competitionsNames, competitionsList)
-    
+
 }
 
 async function onChosenCompetition(e){
 
-    const seasonsList = document.getElementById("season")
+    findMatchesButton.disabled = true
     seasonsList.disabled = false
-    seasonsList.addEventListener("change", onChosenSeason)
+    
 
     const competitionId = e.target.value
 
@@ -50,11 +60,14 @@ async function onChosenCompetition(e){
     lib.render(seasonsNames, seasonsList)
     seasonsList.value = ""
     seasonsList.disabled = false
+    
+    clubsList.value = ""
 
 }
 
 async function onChosenSeason(e){
-    const clubsList = document.getElementById("club")
+    
+    findMatchesButton.disabled = true
     clubsList.disabled = false
     
     const seasonId = e.target.value
@@ -70,9 +83,31 @@ async function onChosenSeason(e){
     lib.render(clubNames, clubsList)
     clubsList.value = ""
     clubsList.disabled = false
+    
+
 }
 
-export const homeView = {
-    populateCompetitions
+function updateFindMatchesButton() {
+    if (
+        competitionsList.value !== "" &&
+        seasonsList.value !== "" &&
+        clubsList.value !== ""
+    ) {
+        findMatchesButton.disabled = false
+    } else {
+        findMatchesButton.disabled = true
+    }
+}
+
+function onFindMatches(e){
+    
+    const competitionId = competitionsList.value
+    const seasonId = seasonsList.value
+    const clubId = clubsList.value
+    lib.page(`/matches?competitionId=${competitionId}&seasonId=${seasonId}&clubId=${clubId}`)
+}
+
+export function showHomeView(){
+    populateCompetitions()
 }
 

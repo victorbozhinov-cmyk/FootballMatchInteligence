@@ -46,6 +46,23 @@ app.get("/api/clubs", async (req, res) => {
     }
 })
 
+app.get("/api/matches", async (req, res)=>{
+    try{
+        const competitionId = Number(req.query.competitionId)
+        const seasonId = Number(req.query.seasonId)
+        const clubId = Number(req.query.clubId)
+
+        const matches = await statsbombService.getClubMatches(competitionId, seasonId, clubId)
+        res.json(matches)
+    }catch(error){
+        console.error(error)
+
+        res.status(500).json({
+            error: "Failed to load matches"
+        })
+    }
+})
+
 
 
 app.listen(3000, () => {

@@ -6,33 +6,42 @@
     <title>Football Match Intelligence</title>
 </head>
 <body>
-    <h1>Football Match Intelligence</h1>
-    <p>Analyze football matches using advanced algorithms.</p>
 
-    <div>
-        <label for="competition">Competition:</label>
+    <div id="home-view">
 
-        <select id="competition">
-            <option value="" disabled selected hidden>Choose a league</option>
-        </select>
+        <h1>Football Match Intelligence</h1>
+        <p>Analyze football matches using advanced algorithms.</p>
+
+        <div>
+            <label for="competition">Competition:</label>
+            <select id="competition">
+                <option value="" disabled selected hidden>Choose a league</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="season">Season:</label>
+            <select id="season" disabled>
+                <option value="" disabled selected hidden>Choose a season</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="club">Club:</label>
+            <select id="club" disabled>
+                <option value="" hidden selected disabled>Choose a club</option>
+            </select>
+        </div>
+
+        <div>
+            <button id="find-matches" disabled>Find matches</button>
+        </div>
+
     </div>
 
-    <div>
-        <label for="season">Season:</label>
-            
-        <select id="season" disabled>
-            <option value="" disabled selected hidden>Choose a season</option>
-        </select>
-    </div>
-
-    <div>
-        <label for="club">Club:</label>
-
-        <select id="club" disabled>
-            <option value="" hidden selected disabled>Choose a club</option>
-        </select>
-    </div>
+    <div id="dynamic-view"></div>
 
     <script type="module" src="./js/app.js"></script>
+
 </body>
 </html>
