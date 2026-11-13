@@ -6,7 +6,8 @@ const endpoints = {
     loadCompetitions: `${BASE_URL}/competitions`,
     loadSeasons: `${BASE_URL}/seasons`,
     loadClubs: `${BASE_URL}/clubs`,
-    loadMatches: `${BASE_URL}/matches`
+    loadMatches: `${BASE_URL}/matches`,
+    loadMatchEvents: `${BASE_URL}/analyze`
 }
 
 async function loadCompetitions() {
@@ -38,9 +39,19 @@ async function loadMatches(competitionId, seasonId, clubId){
 
 }
 
+async function loadMatchEvents(matchId){
+
+    const matchEvents  = await api.get(
+        `${endpoints.loadMatchEvents}?matchId=${encodeURIComponent(matchId)}`
+    )
+
+    return matchEvents
+}
+
 export const footballInteligenceServices = {
     loadCompetitions,
     loadSeasons,
     loadClubs,
-    loadMatches
+    loadMatches,
+    loadMatchEvents
 }

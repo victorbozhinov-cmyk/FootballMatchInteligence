@@ -1,5 +1,6 @@
 import { footballInteligenceServices } from "../js/footballInteligenceServices.js";;
 import { lib } from "../js/lib.js";
+import { showAnalysisView } from "./analysisView.js";
 
 
 
@@ -44,7 +45,7 @@ export async function showMatchesView(ctx){
 
             <p>Match Date: ${match.match_date}</p>
 
-            <button class="analyze-btn" type="button">
+            <button class="analyze-btn" type="button" @click=${() => lib.page(`/analysis?matchId=${match.match_id}`)}>
                 Analyze
             </button>
 
@@ -59,5 +60,17 @@ export async function showMatchesView(ctx){
 
     homeView.hidden = true
 
-    lib.render(matchesList, dynamicView)
+    const template = lib.html`
+        <main>
+            <button type="button" @click=${() => lib.page("/")}>
+                ← Back
+            </button>
+
+            <h1>Match Results</h1>
+
+            ${matchesList}
+        </main>`
+
+    lib.render(template, dynamicView)
+    
 }

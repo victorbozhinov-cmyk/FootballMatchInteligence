@@ -63,6 +63,21 @@ app.get("/api/matches", async (req, res)=>{
     }
 })
 
+app.get("/api/analyze", async (req, res)=>{
+    try{
+        const matchId = Number(req.query.matchId)
+
+        const matchEvents = await statsbombService.getMatchEvents(matchId)
+        res.json(matchEvents)
+    }catch(error){
+        console.error(error)
+
+        res.status(500).json({
+            error: "Failed to load match info"
+        })
+    }
+})
+
 
 
 app.listen(3000, () => {

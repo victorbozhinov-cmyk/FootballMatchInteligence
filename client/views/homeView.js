@@ -108,6 +108,18 @@ function onFindMatches(e){
 }
 
 export function showHomeView(){
-    populateCompetitions()
+    
+
+    const homeView = document.getElementById("home-view")
+    const dynamicView = document.getElementById("dynamic-view")
+
+    homeView.hidden = false
+
+    lib.render(lib.html``, dynamicView)
+
+    if (competitionsList.options.length <= 1) {
+        populateCompetitions()
+    }
+
 }
 
